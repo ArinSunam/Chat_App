@@ -9,21 +9,26 @@ export const signup = async (req, res) => {
   try {
     const { fullName, username, password, confirmPassword, gender } = req.body
 
+
     if (password !== confirmPassword) {
       return res.status(400).json({
         error: "Passwords don't match"
       });
     }
 
-    const user = await User.findone({ username });
+
+    const user = await User.findOne({ username });
 
     if (user) {
       return res.status(400).json({ error: "username already exists" })
     }
 
+
     //Hash Password
-    const salt = await bcrypt.getSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
+
+
 
     //https://avatar-placeholder.iran.liara.run/document
     const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`
